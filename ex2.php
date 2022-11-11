@@ -18,9 +18,9 @@ foreach ($A as $k0 => $v) {
         foreach ($A[$k0][$k1] as $k2 => $v) {
             foreach ($A[$k0][$k1][$k2] as $k3 => $v) {
                 if ($k3 % 2 == 0) {
-                    return TURE;
+                    return true;
                 } else {
-                    return FLASE;
+                    return false;
                 }
                 ;
             }
