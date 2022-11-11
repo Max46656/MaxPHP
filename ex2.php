@@ -80,5 +80,5 @@ if ($X0 = true) {
         $SumT2 += $SumT1;
         $SumT1 = 0;
     }
-    echo "<br>" . $SumT2 . "<br>";
 }
+echo "<br>" . $SumT2 . "<br>";
