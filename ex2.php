@@ -18,6 +18,7 @@ foreach ($A as $k0 => $v) {
         foreach ($A[$k0][$k1] as $k2 => $v) {
             foreach ($A[$k0][$k1][$k2] as $k3 => $v) {
                 $X3 = 0;
+                $X3 = 0;
                 if ($k3 % 2 == 0) {
                     $X3 += 1;
                 } else {
@@ -26,7 +27,11 @@ foreach ($A as $k0 => $v) {
             }
             if ($X3 == $k2) {
                 $X2 += 1;
+    }
+            if ($X3 == $k2) {
+                $X2 += 1;
             } else {
+                $X2 = 0    } else {
                 $X2 = 0;
             }
         }
