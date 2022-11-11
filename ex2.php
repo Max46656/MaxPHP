@@ -12,7 +12,21 @@ $Sum = 0;
 $SumT0 = 0;
 $SumT1 = 0;
 $SumT2 = 0;
-if (COUNT$A[]) {
+
+foreach ($A as $k0 => $v) {
+    foreach ($A[$k0] as $k1 => $v) {
+        foreach ($A[$k0][$k1] as $k2 => $v) {
+            foreach ($A[$k0][$k1][$k2] as $k3 => $v) {
+                if ($k3 % 2 == 0) {
+                    return TURE;
+                } else {
+                    return FLASE;
+                }
+                ;
+            }
+        }
+    }
+}
 
 foreach ($A as $k0 => $v) {
     foreach ($A[$k0] as $k1 => $v) {
@@ -44,4 +58,3 @@ foreach ($A as $k0 => $v) {
     $SumT1 = 0;
 }
 echo "<br>" . $SumT2 . "<br>";
-}
