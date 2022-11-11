@@ -9,14 +9,16 @@ $A = [[[[1, 2, 3, 4, 5, 6, 7],
             [70, 71, 72, 73, 74, 75, 76]]]];
 
 $Sum = 0;
-$SumT = 0;
 $SumT0 = 0;
 $SumT1 = 0;
+$SumT2 = 0;
+if (COUNT$A[]) {
+
 foreach ($A as $k0 => $v) {
     foreach ($A[$k0] as $k1 => $v) {
         foreach ($A[$k0][$k1] as $k2 => $v) {
-            foreach ($A[$k0][$k1][$k2] as $k => $v) {
-                if ($k % 2 == 0) {
+            foreach ($A[$k0][$k1][$k2] as $k3 => $v) {
+                if ($k3 % 2 == 0) {
                     echo $v;
                 } else {
                     echo "+";
@@ -26,15 +28,20 @@ foreach ($A as $k0 => $v) {
                 $Sum += $v;
             }
             echo "=" . $Sum . "<br>";
-            $SumT += $Sum;
+            $SumT0 += $Sum;
             $Sum = 0;
         }
-        echo $SumT . "<br>";
-        $SumT0 += $SumT;
-        $SumT = 0;
+        echo $SumT0 . "<br>";
+        $SumT1 += $SumT0;
+        $SumT0 = 0;
+
+        if ($k2 == 2) {
+            echo $SumT1 . "<br>";
+        }
     }
-    echo $SumT0 . "<br>";
-    $SumT1 += $SumT0;
-    $SumT0 = 0;
+    echo $SumT1 . "<br>";
+    $SumT2 += $SumT1;
+    $SumT1 = 0;
 }
-echo $SumT1 . "<br>";
+echo "<br>" . $SumT2 . "<br>";
+}
