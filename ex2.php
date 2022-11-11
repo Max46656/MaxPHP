@@ -17,44 +17,61 @@ foreach ($A as $k0 => $v) {
     foreach ($A[$k0] as $k1 => $v) {
         foreach ($A[$k0][$k1] as $k2 => $v) {
             foreach ($A[$k0][$k1][$k2] as $k3 => $v) {
+                $X3 = 0;
                 if ($k3 % 2 == 0) {
-                    return true;
+                    $X3 += 1;
                 } else {
-                    return false;
+                    $X3 = 0;
                 }
-                ;
+            }
+            if ($X3 == $k2) {
+                $X2 += 1;
+            } else {
+                $X2 = 0;
             }
         }
+        if ($X2 == $k1) {
+            $X1 += 1;
+        } else {
+            $X1 = 0;
+        }
+    }
+    if ($X1 == $k0) {
+        $X0 = true;
+    } else {
+        $X0 = false;
     }
 }
 
-foreach ($A as $k0 => $v) {
-    foreach ($A[$k0] as $k1 => $v) {
-        foreach ($A[$k0][$k1] as $k2 => $v) {
-            foreach ($A[$k0][$k1][$k2] as $k3 => $v) {
-                if ($k3 % 2 == 0) {
-                    echo $v;
-                } else {
-                    echo "+";
-                    echo $v;
-                    echo "+";
+if ($X0 = true) {
+    foreach ($A as $k0 => $v) {
+        foreach ($A[$k0] as $k1 => $v) {
+            foreach ($A[$k0][$k1] as $k2 => $v) {
+                foreach ($A[$k0][$k1][$k2] as $k3 => $v) {
+                    if ($k3 % 2 == 0) {
+                        echo $v;
+                    } else {
+                        echo "+";
+                        echo $v;
+                        echo "+";
+                    }
+                    $Sum += $v;
                 }
-                $Sum += $v;
+                echo "=" . $Sum . "<br>";
+                $SumT0 += $Sum;
+                $Sum = 0;
             }
-            echo "=" . $Sum . "<br>";
-            $SumT0 += $Sum;
-            $Sum = 0;
-        }
-        echo $SumT0 . "<br>";
-        $SumT1 += $SumT0;
-        $SumT0 = 0;
+            echo $SumT0 . "<br>";
+            $SumT1 += $SumT0;
+            $SumT0 = 0;
 
-        if ($k2 == 2) {
-            echo $SumT1 . "<br>";
+            if ($k2 == 2) {
+                echo $SumT1 . "<br>";
+            }
         }
+        echo $SumT1 . "<br>";
+        $SumT2 += $SumT1;
+        $SumT1 = 0;
     }
-    echo $SumT1 . "<br>";
-    $SumT2 += $SumT1;
-    $SumT1 = 0;
+    echo "<br>" . $SumT2 . "<br>";
 }
-echo "<br>" . $SumT2 . "<br>";
