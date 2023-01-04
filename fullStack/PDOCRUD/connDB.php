@@ -1,11 +1,18 @@
 <?
 class connDB
 {
-    public static $dbName = 'shop';
-    public static $dbms = 'mysql';
-    public static $host = 'localhost';
-    public static $user = 'Max';
-    public static $pass = 'SAYWHAT';
+    use Dotenv\Dotenv;
+
+    public function __construct(){
+    $dotenv = Dotenv\Dotenv::createImmutable(__DIR__);
+    $dotenv->load();
+    }
+
+    public static $dbName = getenv('dbname');
+    public static $dbms = getenv('DATABASE_DNS');
+    public static $host = getenv('host');
+    public static $user = getenv('DATABASE_USER');
+    public static $pass = getenv('DATABASE_PASSWORD');
 
     public static function ConnDB()
     {
