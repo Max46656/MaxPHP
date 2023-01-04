@@ -1,0 +1,59 @@
+body {
+    font-size: 20px;
+    font-family: 'Plaza', 'Cascadia Code', 'FiraCode', 'Cubic 11', 'Noto Sans TC';
+}
+button {
+    background-color: rgb(66, 66, 33); /* Green */
+    border: none;
+    color: white;
+    padding: 8px 10px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 20px;
+    font-weight: bold;
+    border-radius: 10px;
+}
+button:hover,
+button:focus {
+    background: #0053ba;
+}
+table {
+    display: inline-table;
+    margin: 1em;
+    border-block-end: solid;
+    border: 1px dashed;
+    border-collapse: collapse;
+}
+tr,
+td {
+    border: 1px dashed;
+}
+td.face {
+    white-space: pre;
+}
+select {
+    cursor: pointer;
+    font-size: 24px;
+    font-family: 'Plaza', 'Cascadia Code', 'FiraCode', 'Cubic 11', 'Noto Sans TC';
+}
+input {
+    border: 0;
+    font-size: 22px;
+    background-color: #663366;
+    color: #fff;
+    border-radius: 10px;
+    cursor: pointer;
+    font-weight: bold;
+}
+input:hover {
+    border: 0;
+    color: #fff;
+    background-color: #6b1b6b;
+}
+a:link {
+    color: red;
+}
+a:visited {
+    color: white;
+}

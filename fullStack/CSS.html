@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Document</title>
+  <style type="text/css">
+    #myid {
+      /* id選擇器權重為100 */
+      background-color: pink;
+    }
+
+    #divid .myspan input {
+      /* 權重為 100 + 10 + 1 = 111 */
+      background-color: yellow;
+    }
+
+    input[type="button"] {
+      /* 權重為 10 */
+      color: white !important;
+      /* !important權重為無限 */
+    }
+
+    input.myclass {
+      /* 此為標籤指定樣式，權重為 1 + 10 = 11 */
+      color: black;
+    }
+  </style>
+</head>
+
+<body>
+  <div id="divid">
+    <span class="myspan">
+      <input type="button" id="myid" class="myclass" name="myname" value="按鈕"
+        style="background-color: blue; color: green;">
+      <!-- style樣式的權重為1000 -->
+    </span>
+  </div>
+</body>
+
+</html>
