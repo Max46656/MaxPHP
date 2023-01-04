@@ -1,7 +1,7 @@
 <?
 class connDB
 {
-    public static $dbName = 'test';
+    public static $dbName = 'shop';
     public static $dbms = 'mysql';
     public static $host = 'localhost';
     public static $user = 'Max';
@@ -13,7 +13,7 @@ class connDB
         try {
             $conn = new PDO($dsn, connDB::$user, self::$pass);
         } catch (PDOException $e) {
-            die("Error!: " . $e->getMessage() . "<br/>");
+            die("ヽ(´;ω;`)ﾉ!: " . $e->getMessage() . "<br/>");
         }
         return $conn;
     }
@@ -33,8 +33,11 @@ class connDB
     }
     public function fieldMeta()
     {
+        if (!isset($_GET['DBSelect'])) {
+            exit;
+        }
         $conn = $this->ConnDB();
-        $Sql = "SHOW  COLUMNS FROM" . "`{$_GET['DBSelect']}`" . "FROM`" . self::$dbName . "`";
+        $Sql = "SHOW COLUMNS FROM" . "`{$_GET['DBSelect']}`" . "FROM`" . self::$dbName . "`";
         $tableMeta = $conn->prepare($Sql);
         $tableMeta->execute();
         foreach ($tableMeta as $key => $colMeta) {
@@ -56,5 +59,19 @@ class connDB
         $conn = null;
         $field = array_combine($fieldName, $fieldType);
         return $field;
+    }
+    public function fieldDetail()
+    {
+        $conn = $this->ConnDB();
+        $Sql = "SHOW COLUMNS FROM" . "`{$_GET['DBSelect']}`" . "FROM`" . self::$dbName . "`";
+        $tableMeta = $conn->prepare($Sql);
+        $tableMeta->execute();
+        foreach ($tableMeta as $key => $colMeta) {
+            $fieldName[] = $colMeta['Field'];
+        }
+        $tableMeta = null;
+        $typeSql = "SELECT `field`,`required`,`display_name` FROM `data_rows`";
+        $sqlToHtml = $conn->prepare($typeSql);
+        $sqlToHtml->execute();
     }
 }

@@ -1,6 +1,8 @@
 body {
     font-size: 20px;
     font-family: 'Plaza', 'Cascadia Code', 'FiraCode', 'Cubic 11', 'Noto Sans TC';
+    margin: 0 auto;
+    text-align: center;
 }
 button {
     background-color: rgb(66, 66, 33); /* Green */
@@ -28,32 +30,73 @@ table {
 tr,
 td {
     border: 1px dashed;
+    text-align: center;
 }
 td.face {
     white-space: pre;
+}
+input {
+    font-size: 20px;
+    font-family: 'Plaza', 'Cascadia Code', 'FiraCode', 'Cubic 11', 'Noto Sans TC';
+    margin: 0 auto;
+    text-align: center;
+}
+textarea {
+    font-size: 20px;
+    font-family: 'Plaza', 'Cascadia Code', 'FiraCode', 'Cubic 11', 'Noto Sans TC';
+    margin: 0 auto;
+    text-align: center;
+}
+.upload_cover {
+    position: relative;
+    width: 100px;
+    height: 100px;
+    text-align: center;
+    cursor: pointer;
+    background: #efefef;
+    border: 1px solid #595656;
+}
+#upload_input {
+    display: none;
+}
+.upload_icon {
+    white-space: pre;
+    font-weight: bold;
+    font-size: 100%;
+    position: absolute;
+    left: -100px;
+}
+.upload_icon:hover {
+    white-space: pre;
+    font-weight: bold;
+    font-size: 100%;
+    position: absolute;
+    left: -90px;
+    top: -5px;
+    background-color: rgb(66, 66, 33);
+    color: #fff;
 }
 select {
     cursor: pointer;
     font-size: 24px;
     font-family: 'Plaza', 'Cascadia Code', 'FiraCode', 'Cubic 11', 'Noto Sans TC';
 }
-input {
+input.commit {
     border: 0;
     font-size: 22px;
     background-color: #663366;
     color: #fff;
     border-radius: 10px;
     cursor: pointer;
-    font-weight: bold;
+    font-weight: lighter;
 }
-input:hover {
+input.commit:hover {
     border: 0;
     color: #fff;
     background-color: #6b1b6b;
 }
-a:link {
-    color: red;
-}
-a:visited {
+a {
     color: white;
+    font-weight: lighter;
+    text-decoration: none;
 }

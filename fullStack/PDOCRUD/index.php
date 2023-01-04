@@ -14,7 +14,6 @@
 </head>
 
 <body>
-
   <?$Read = new Read;?>
   <h1 align='center'>
     <?echo $Read->title(); ?>管理
@@ -22,13 +21,12 @@
   <br><br><br>
   <div id="main">
 
-    <form id="DBform" action="http://max.com:666/Maxfirstone/fullStack/CRUD/PDOindex.php" method="GET" align="center">
+    <form id="DBform" action="http://max.com:666/Maxfirstone/fullStack/PDOCRUD/index.php" method="GET" align="center">
       資料表選擇：<select name="DBSelect">
         <?echo $Read->DBSelect(); ?>
       </select><br>
-      <input type="submit" value="送出" id="submit">
+      <input type="submit" value="送出" class="commit">
     </form>
-
     <?echo $Read->DBcount(); ?>
     <p align="center">
       <?echo $Read->CreateLink() ?>
@@ -36,20 +34,21 @@
       <?echo $Read->DeleteLink() ?>
     </p>
 
-    <form id="formR" action="http://max.com:666/Maxfirstone/fullStack/CRUD/PDOindex.php" method="POST" align="center">
-      <table class="DBTable" align="center">
-        <thead align="center">
+    <form id="formR" action="http://max.com:666/Maxfirstone/fullStack/PDOCRUD/index.php" method="POST">
+      <table class="DBTable">
+        <thead>
           <?echo $Read->fromTitle(); ?>
         </thead>
         <tbody>
-          <tr align="center">
+          <tr>
             <?echo $Read->fromContent(); ?>
           </tr>
         </tbody>
       </table>
-      <p align="center">
-        <?echo $Read->pageUrl(); ?>
-      </p>
+    </form>
+    <p>
+      <?echo $Read->pageUrl(); ?>
+    </p>
   </div>
 
 </body>
@@ -61,7 +60,7 @@ class Read
 {
     public function __construct()
     {
-        require_once "PDOconnDB.php";
+        require_once "connDB.php";
         require_once 'SingularPlural.php';
     }
     public function title()
@@ -90,7 +89,7 @@ class Read
             return null;
         }
         $title = $this->titleSingular();
-        $htmlTag = "<button><a href='PDOcreate.php?DBSelect={$_GET['DBSelect']}' >";
+        $htmlTag = "<button><a href='create.php?DBSelect={$_GET['DBSelect']}' >";
         $htmlTag .= "新增一筆" . $title;
         $htmlTag .= "</a></button>";
         return $htmlTag;
@@ -164,10 +163,13 @@ class Read
                 }
                 $htmlTag .= "<td>" . $value . "</td>";
             }
-            $htmlTag .= "<td class=face><a href='PDOupdate.php?id={$row["id"]}'><button>(ﾟ∀。)</button></a></td>";
-            $htmlTag .= "<td class=face><a href='PDOdelete.php?m_id={$row["id"]}'><button>( ×ω× )</button></a></td>";
-            $htmlTag .= "<td><input type='checkbox' name='del[]' value='{$row['id']}'></td>";
-            $htmlTag .= "</tr>";
+            if (isset($row["id"])) {
+                $htmlTag .= "<td class=face><a href='update.php?id={$row["id"]}'><button>(ﾟ∀。)</button></a></td>";
+                $htmlTag .= "<td class=face><a href='delete.php?m_id={$row["id"]}'><button>( ×ω× )</button></a></td>";
+                $htmlTag .= "<td><input type='checkbox' name='del[]' value='{$row['id']}'></td>";
+                $htmlTag .= "</tr>";
+            }
+
         }
         $result = null;
         $conn = null;
