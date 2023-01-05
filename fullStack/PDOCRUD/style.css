@@ -15,6 +15,7 @@ button {
     font-size: 20px;
     font-weight: bold;
     border-radius: 10px;
+    user-select: none;
 }
 button:hover,
 button:focus {
@@ -47,7 +48,7 @@ textarea {
     margin: 0 auto;
     text-align: center;
 }
-.upload_cover {
+.button_cover {
     position: relative;
     width: 100px;
     height: 100px;
@@ -56,17 +57,18 @@ textarea {
     background: #efefef;
     border: 1px solid #595656;
 }
-#upload_input {
+#button_input {
     display: none;
+    user-select: none;
 }
-.upload_icon {
+.button_icon {
     white-space: pre;
     font-weight: bold;
     font-size: 100%;
     position: absolute;
     left: -100px;
 }
-.upload_icon:hover {
+.button_icon:hover {
     white-space: pre;
     font-weight: bold;
     font-size: 100%;
@@ -94,6 +96,31 @@ input.commit:hover {
     border: 0;
     color: #fff;
     background-color: #6b1b6b;
+}
+label {
+    padding: 0;
+    margin-right: auto;
+    cursor: pointer;
+}
+input[type='checkbox'] {
+    display: none;
+}
+.checkbox {
+    background-color: rgb(66, 66, 33); /* Green */
+    border: none;
+    color: white;
+    padding: 4px 8px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 20px;
+    border-radius: 10px;
+    user-select: none; /* 防止文字被滑鼠選取反白 */
+}
+
+input[type='checkbox']:checked + span {
+    color: #fff;
+    background-color: #0053ba;
 }
 a {
     color: white;

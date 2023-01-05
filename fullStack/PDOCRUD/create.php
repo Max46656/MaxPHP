@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh-tw">
 
 <head>
   <meta charset="UTF-8">
@@ -9,7 +9,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
   <link rel="stylesheet" type="text/css" href="style.css">
-  <title>專案資料管理</title>
+  <title>PDO_CRUD_C</title>
 </head>
 
 <body>
@@ -45,12 +45,16 @@
 </html>
 
 <?php
+
+use Inflect\Inflect;
+
 class Create
 {
     public function __construct()
     {
         require_once "connDB.php";
         require_once 'Inflect.php';
+        // return var_export(self::$DBSelect);
     }
     public function success()
     {
@@ -142,18 +146,18 @@ class Create
                 $htmlTag .= "<td><textarea name='$key' rows='6' cols='21' placeholder='$value'></textarea></td></tr>";
                 continue;
             }
-            if ($key == "pic" or $key == "icon" or $key == "pics" or $value == "image") {
-                $htmlTag .= "<td><label class='upload_cover'>
-                <input id='upload_input' type='file' accept='.jpg, .jpeg, .png, .bmp, .gif,' text-align: start;>
-                <span class='upload_icon'>(つ´ω`)つ點我</span>
-                </label></td>";
+            if ($value == "checkbox") {
+                $htmlTag .= "<td><label class='button_cover'>
+                <input id='button_input' type='checkbox' name='$key' value='$value'>
+                <span class='button_icon'>(･ω´･ )つ啟用</span>
+                </label></td></tr>";
                 continue;
             }
             if ($key == "pic" or $key == "icon" or $key == "pics" or $value == "image") {
-                $htmlTag .= "<td><label class='upload_cover'>
-                <input id='upload_input' type='file' accept='.jpg, .jpeg, .png, .bmp, .gif,' text-align: start;>
-                <span class='upload_icon'>(つ´ω`)つ點我</span>
-                </label></td>";
+                $htmlTag .= "<td><label class='button_cover'>
+                <input id='button_input' type='file' accept='.jpg, .jpeg, .png, .bmp, .gif,'>
+                <span class='button_icon'>(つ´ω`)つ點我</span>
+                </label></td></tr>";
                 continue;
             }
             $htmlTag .= "<td><input type='$value' name='$key' placeholder='$value'></td></tr>";
@@ -169,9 +173,6 @@ class Create
     public function save()
     {
         if (isset($_POST["action"])) {
-            // if (!isset($_GET['DBSelect'])) {
-            //     exit;
-            // }
             $conn = new connDB;
             $conn = $conn->ConnDB();
             $table = array_pop($_POST);
@@ -189,15 +190,15 @@ class Create
             $sql = chop($sql, ",");
             $sql .= ");";
             $sql .= "SET FOREIGN_KEY_CHECKS=1;";
-            return var_dump($sql);
             try {
                 $result = $conn->prepare($sql);
                 $result->execute();
                 $conn = null;
-                header("Location: http://max.com:666/Maxfirstone/fullStack/PDOCRUD/create.php?{$_GET['DBSelect']}&success=NiceJob");
+                header("Location:http://max.com:666/Maxfirstone/fullStack/PDOCRUD/create.php?DBSelect={$table}&success=NiceJob");
             } catch (PDOException $e) {
                 $conn = null;
                 die("ヽ(´;ω;`)ﾉ!: " . $e->getMessage() . "<br/>");
+
             }
         }
 

@@ -55,6 +55,8 @@ THE SOFTWARE.
 //   Added rule for potato -> potatoes
 //   Added rule for *us -> *uses
 
+namespace Inflect;
+
 class Inflect
 {
     static $plural = array(
@@ -158,7 +160,6 @@ class Inflect
             }
 
         }
-
         return $string;
     }
 

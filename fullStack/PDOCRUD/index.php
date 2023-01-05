@@ -10,7 +10,7 @@
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
   <script src="javascript.js"></script>
   <link rel="stylesheet" type="text/css" href="style.css">
-  <title>資料管理CRUD</title>
+  <title>PDO_CRUD_R</title>
 </head>
 
 <body>
@@ -18,7 +18,6 @@
   <h1 align='center'>
     <?echo $Read->title(); ?>管理
   </h1>
-  <br><br><br>
   <div id="main">
 
     <form id="DBform" action="http://max.com:666/Maxfirstone/fullStack/PDOCRUD/index.php" method="GET" align="center">
@@ -30,6 +29,7 @@
     </form>
     <?echo $Read->DBcount(); ?>
     <p align="center">
+      <?echo $Read->success(); ?>
       <?echo $Read->CreateLink() ?>
       &emsp;
       <?echo $Read->DeleteLink() ?>
@@ -57,6 +57,9 @@
 </html>
 
 <?php
+
+use Inflect\Inflect;
+
 class Read
 {
     public function __construct()
@@ -83,6 +86,16 @@ class Read
         $page = $pageData["page"];
         $htmlTag = "<p align='center' >目前有{$count}筆資料。<br>目前在第{$page}頁，總共有{$total_page}頁。</p>";
         return $htmlTag;
+    }
+    public function success()
+    {
+        if (isset($_GET['deleteOne'])) {
+            return "刪除該資料成功(`･∀･)b";
+        }
+        if (isset($_GET['deleteMultiple'])) {
+            return "刪除這些資料成功(`･∀･)b";
+        }
+        return null;
     }
     public function CreateLink()
     {
@@ -166,11 +179,22 @@ class Read
             }
             if (isset($row["id"])) {
                 $htmlTag .= "<td class=face><a href='update.php?id={$row["id"]}'><button>(ﾟ∀。)</button></a></td>";
-                $htmlTag .= "<td class=face><a href='delete.php?m_id={$row["id"]}'><button>( ×ω× )</button></a></td>";
+                $htmlTag .= "<td class=face><a href='delete.php?DBSelect={$_GET['DBSelect']}&id={$row["id"]}'><button>( ×ω× )</button></a></td>";
                 $htmlTag .= "<td><input type='checkbox' name='del[]' value='{$row['id']}'></td>";
                 $htmlTag .= "</tr>";
+            } else {
+                $id1k = key($row);
+                $id1v = array_shift($row);
+                $id2k = key($row);
+                $id2v = array_shift($row);
+                $htmlTag .= "<td class=face><a href='update.php?DBSelect={$_GET['DBSelect']}&{$id1k}={$id1v}&{$id2k}={$id2v}'><button>(ﾟ∀。)</button></a></td>";
+                $htmlTag .= "<td class=face><a href='delete.php?DBSelect={$_GET['DBSelect']}&{$id1k}={$id1v}&{$id2k}={$id2v}'><button>( ×ω× )</button></a></td>";
+                $htmlTag .= "<td><label>
+                <input type='checkbox' name='del_{$id1k}[]' value='{$id1v}'>
+                <span class='checkbox'>(ﾟдﾟ)</span>
+                <input type='hidden' name='del_{$id2k}[]' value='{$id2v}'></label></td>";
+                $htmlTag .= "</tr>";
             }
-
         }
         $result = null;
         $conn = null;
@@ -189,7 +213,7 @@ class Read
             $result = $conn->prepare($sql);
             $result->execute();
         } catch (PDOException $e) {
-            die("( ˘•ω•˘ )沒有這個資料表…<br>_:(´-ω-｀)」∠):_或是資料庫爆炸了…");
+            die("ヽ(´;ω;`)ﾉ!: " . $e->getMessage() . "<br/>");
         }
         $count = $result->rowCount();
         $nowPage = 1;
