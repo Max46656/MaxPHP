@@ -24,8 +24,9 @@
     <form id="DBform" action="http://max.com:666/Maxfirstone/fullStack/PDOCRUD/index.php" method="GET" align="center">
       資料表選擇：<select name="DBSelect">
         <?echo $Read->DBSelect(); ?>
-      </select><br>
-      <input type="submit" value="送出" class="commit">
+      </select>
+      <br><br>
+      <input type="submit" value="確認" class="commit">
     </form>
     <?echo $Read->DBcount(); ?>
     <p align="center">
@@ -61,7 +62,7 @@ class Read
     public function __construct()
     {
         require_once "connDB.php";
-        require_once 'SingularPlural.php';
+        require_once 'Inflect.php';
     }
     public function title()
     {
@@ -113,7 +114,7 @@ class Read
         $conn = null;
         return $htmlTag;
     }
-    public function titleSingular()
+    private function titleSingular()
     {
         $title = $this->title();
         $titleSingular = Inflect::singularize($title);
@@ -176,16 +177,20 @@ class Read
         // return $start;
         return $htmlTag;
     }
-    public function page()
+    private function page()
     {
         if (!isset($_GET['DBSelect'])) {
             exit;
         }
-        $conn = new connDB;
-        $conn = $conn->ConnDB();
-        $sql = "SELECT * FROM `" . $_GET['DBSelect'] . "`";
-        $result = $conn->prepare($sql);
-        $result->execute();
+        try {
+            $conn = new connDB;
+            $conn = $conn->ConnDB();
+            $sql = "SELECT * FROM `" . $_GET['DBSelect'] . "`";
+            $result = $conn->prepare($sql);
+            $result->execute();
+        } catch (PDOException $e) {
+            die("( ˘•ω•˘ )沒有這個資料表…<br>_:(´-ω-｀)」∠):_或是資料庫爆炸了…");
+        }
         $count = $result->rowCount();
         $nowPage = 1;
         if (isset($_GET['Page'])) {
@@ -209,7 +214,9 @@ class Read
         $next = $pageData["next"];
         $page = $pageData["page"];
         $htmlTag = "";
-
+        if ($total_page == 1) {
+            return "<button><a href='?DBSelect={$_GET['DBSelect']}'>沒有更多資料了(´・ω・`)</a></button>";
+        }
         switch ($page) {
             case 1:
                 $htmlTag = "<button><a href='?DBSelect={$_GET['DBSelect']}&Page=$next'>下一頁</a></button>

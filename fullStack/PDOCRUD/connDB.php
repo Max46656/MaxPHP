@@ -1,24 +1,31 @@
 <?
-class connDB
+require_once "config.php";
+
+// require_once "config.php";
+// $config = new config;
+// $connDB = new connDB($config);
+// echo var_export($connDB->ConnDB());
+class connDB extends config
 {
-    use Dotenv\Dotenv;
+    // private static $dbName;
+    // private static $dbms;
+    // private static $host;
+    // private static $user;
+    // private static $pass;
+    // public function __construct(config $config)
+    // {
+    //     config::$dbName = $config->dbName;
+    //     config::$dbms = $config->dbms;
+    //     config::$host = $config->host;
+    //     config::$user = $config->user;
+    //     config::$pass = $config->pass;
+    // }
 
-    public function __construct(){
-    $dotenv = Dotenv\Dotenv::createImmutable(__DIR__);
-    $dotenv->load();
-    }
-
-    public static $dbName = getenv('dbname');
-    public static $dbms = getenv('DATABASE_DNS');
-    public static $host = getenv('host');
-    public static $user = getenv('DATABASE_USER');
-    public static $pass = getenv('DATABASE_PASSWORD');
-
-    public static function ConnDB()
+    public function ConnDB()
     {
-        $dsn = self::$dbms . ":host=" . self::$host . ";dbname=" . self::$dbName;
+        $dsn = config::$dbms . ":host=" . config::$host . ";dbname=" . config::$dbName;
         try {
-            $conn = new PDO($dsn, connDB::$user, self::$pass);
+            $conn = new PDO($dsn, config::$user, config::$pass);
         } catch (PDOException $e) {
             die("ヽ(´;ω;`)ﾉ!: " . $e->getMessage() . "<br/>");
         }
@@ -28,11 +35,11 @@ class connDB
     public function tblName()
     {
         $conn = $this->ConnDB();
-        $Sql = "SHOW TABLES FROM`" . self::$dbName . "`";
+        $Sql = "SHOW TABLES FROM`" . config::$dbName . "`";
         $DBMeta = $conn->prepare($Sql);
         $DBMeta->execute();
         foreach ($DBMeta as $key => $tableMeta) {
-            $tblName[] = $tableMeta["Tables_in_" . self::$dbName];
+            $tblName[] = $tableMeta["Tables_in_" . config::$dbName];
         }
         $DBMeta = null;
         $conn = null;
@@ -44,7 +51,7 @@ class connDB
             exit;
         }
         $conn = $this->ConnDB();
-        $Sql = "SHOW COLUMNS FROM" . "`{$_GET['DBSelect']}`" . "FROM`" . self::$dbName . "`";
+        $Sql = "SHOW COLUMNS FROM" . "`{$_GET['DBSelect']}`" . "FROM`" . config::$dbName . "`";
         $tableMeta = $conn->prepare($Sql);
         $tableMeta->execute();
         foreach ($tableMeta as $key => $colMeta) {
@@ -70,7 +77,7 @@ class connDB
     public function fieldDetail()
     {
         $conn = $this->ConnDB();
-        $Sql = "SHOW COLUMNS FROM" . "`{$_GET['DBSelect']}`" . "FROM`" . self::$dbName . "`";
+        $Sql = "SHOW COLUMNS FROM" . "`{$_GET['DBSelect']}`" . "FROM`" . config::$dbName . "`";
         $tableMeta = $conn->prepare($Sql);
         $tableMeta->execute();
         foreach ($tableMeta as $key => $colMeta) {
