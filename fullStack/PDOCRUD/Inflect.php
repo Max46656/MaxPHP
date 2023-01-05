@@ -197,6 +197,5 @@ class Inflect
         } else {
             return $count . " " . self::pluralize($string);
         }
-
     }
 }

@@ -50,7 +50,7 @@ class Create
     public function __construct()
     {
         require_once "connDB.php";
-        require_once 'SingularPlural.php';
+        require_once 'Inflect.php';
     }
     public function success()
     {
