@@ -5,17 +5,20 @@
   <meta charset="UTF-8">
   <meta name="author" content="Max and his little friend">
   <meta name="description" content="CRUD in PDO">
-  <meta name="color-scheme" content="light">
+  <meta name="color-scheme" content="light|dark">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
   <script src="javascript.js"></script>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Noto+Sans+TC&display=swap">
   <link rel="stylesheet" type="text/css" href="style.css">
   <title>PDO_CRUD_R</title>
 </head>
 
 <body>
-  <?$Read = new Read;?>
-  <h1 align='center'>
+  <?require_once "connDB.php";?>
+  <?$connDB = new ConnDB;?>
+  <?$Read = new Read($connDB);?>
+  <h1>
     <?echo $Read->title(); ?>管理
   </h1>
   <div id="main">
@@ -38,7 +41,7 @@
     <form id="formR" action="http://max.com:666/Maxfirstone/fullStack/PDOCRUD/index.php" method="POST">
       <table class="DBTable">
         <thead>
-          <?echo $Read->fromTitle(); ?>
+          <?echo $Read->fromTitle($connDB); ?>
         </thead>
         <tbody>
           <tr>
@@ -58,14 +61,19 @@
 
 <?php
 
-use Inflect\Inflect;
+use grammar\Inflect;
 
 class Read
 {
-    public function __construct()
+    protected static $connDB;
+    protected $tblNames;
+
+    public function __construct(connDB $connDB)
     {
-        require_once "connDB.php";
-        require_once 'Inflect.php';
+        require 'Inflect.php';
+        self::$connDB = $connDB->ConnDB();
+        $this->tblNames = $connDB->tblName();
+        // $connDB = null;
     }
     public function title()
     {
@@ -73,6 +81,7 @@ class Read
             return "專案資料";
         }
         $title = mb_convert_case($_GET['DBSelect'], MB_CASE_TITLE, "UTF-8");
+        $title = $this->Singular($title);
         return $title;
     }
     public function DBcount()
@@ -102,7 +111,8 @@ class Read
         if (!isset($_GET['DBSelect'])) {
             return null;
         }
-        $title = $this->titleSingular();
+        $title = $this->title();
+        $title = $this->Singular($title);
         $htmlTag = "<button><a href='create.php?DBSelect={$_GET['DBSelect']}' >";
         $htmlTag .= "新增一筆" . $title;
         $htmlTag .= "</a></button>";
@@ -118,28 +128,25 @@ class Read
     }
     public function DBSelect()
     {
-        $conn = new connDB;
-        $tblNames = $conn->tblName();
+        $tblNames = $this->tblNames;
         $htmlTag = "";
         foreach ($tblNames as $key => $value) {
             $htmlTag .= "<option value=" . $value . ">" . $value . "</option>";
         }
-        $conn = null;
         return $htmlTag;
     }
-    private function titleSingular()
+    protected function Singular($String)
     {
-        $title = $this->title();
-        $titleSingular = Inflect::singularize($title);
-        return $titleSingular;
+        $SingularString = Inflect::singularize($String);
+        return $SingularString;
     }
-    public function fromTitle()
+    public function fromTitle(connDB $connDB)
     {
         if (!isset($_GET['DBSelect'])) {
             exit;
         }
-        $conn = new connDB;
-        $result = $conn->fieldMeta();
+        $this->fieldMeta = $connDB->fieldMeta();
+        $result = $this->fieldMeta;
         $htmlTag = "";
         foreach ($result as $key => $value) {
             $htmlTag .= "<th>$key</th>";
@@ -159,9 +166,8 @@ class Read
         $pageData = $this->page();
         $start = $pageData["start"];
         $per_page = $pageData["per_page"];
-        $conn = new connDB;
+        $conn = self::$connDB;
         $sql = "SELECT * FROM `" . $_GET['DBSelect'] . "`limit " . $start . "," . $per_page;
-        $conn = $conn->ConnDB();
         $result = $conn->prepare($sql);
         $result->execute();
         $htmlTag = "";
@@ -179,7 +185,7 @@ class Read
             }
             if (isset($row["id"])) {
                 $htmlTag .= "<td class=face><a href='update.php?id={$row["id"]}'><button>(ﾟ∀。)</button></a></td>";
-                $htmlTag .= "<td class=face><a href='delete.php?DBSelect={$_GET['DBSelect']}&id={$row["id"]}'><button>( ×ω× )</button></a></td>";
+                $htmlTag .= "<td class=face><a href='delete.php?DBSelect={$_GET['DBSelect']}&id={$row["id"]}'><button>(×ω×)</button></a></td>";
                 $htmlTag .= "<td><input type='checkbox' name='del[]' value='{$row['id']}'></td>";
                 $htmlTag .= "</tr>";
             } else {
@@ -191,29 +197,27 @@ class Read
                 $htmlTag .= "<td class=face><a href='delete.php?DBSelect={$_GET['DBSelect']}&{$id1k}={$id1v}&{$id2k}={$id2v}'><button>( ×ω× )</button></a></td>";
                 $htmlTag .= "<td><label>
                 <input type='checkbox' name='del_{$id1k}[]' value='{$id1v}'>
-                <span class='checkbox'>(ﾟдﾟ)</span>
+                <span class='checkbox'>( ﾟдﾟ )</span>
                 <input type='hidden' name='del_{$id2k}[]' value='{$id2v}'></label></td>";
                 $htmlTag .= "</tr>";
             }
         }
         $result = null;
         $conn = null;
-        // return $start;
         return $htmlTag;
     }
-    private function page()
+    protected function page()
     {
         if (!isset($_GET['DBSelect'])) {
             exit;
         }
         try {
-            $conn = new connDB;
-            $conn = $conn->ConnDB();
+            $conn = self::$connDB;
             $sql = "SELECT * FROM `" . $_GET['DBSelect'] . "`";
             $result = $conn->prepare($sql);
             $result->execute();
         } catch (PDOException $e) {
-            die("ヽ(´;ω;`)ﾉ!: " . $e->getMessage() . "<br/>");
+            die("<span class=errorMessage>" . "ヽ(´;ω;`)ﾉ!: " . $e->getMessage() . "</span><br/>");
         }
         $count = $result->rowCount();
         $nowPage = 1;

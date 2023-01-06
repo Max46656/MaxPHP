@@ -55,7 +55,7 @@ THE SOFTWARE.
 //   Added rule for potato -> potatoes
 //   Added rule for *us -> *uses
 
-namespace Inflect;
+namespace grammar;
 
 class Inflect
 {

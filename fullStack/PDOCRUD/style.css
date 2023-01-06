@@ -1,8 +1,23 @@
 body {
     font-size: 20px;
-    font-family: 'Plaza', 'Cascadia Code', 'FiraCode', 'Cubic 11', 'Noto Sans TC';
+    font-family: 'Cubic_11', 'Noto Sans TC';
     margin: 0 auto;
     text-align: center;
+}
+h1 {
+    text-align: center;
+    font-family: 'Plaza', 'Noto Sans TC';
+    font-size: 60px;
+}
+@font-face {
+    font-family: 'Plaza';
+    src: local('Plaza'), local('PlazaITC-Normal'), local('PlazaITC'), url(PlazaITC-Normal.ttf);
+    font-weight: normal;
+}
+@font-face {
+    font-family: 'Cubic_11';
+    src: local('Cubic 11'), local('Cubic_11'), local('Cubic_11_1.013_R'), url(Cubic_11_1.013_R.ttf);
+    font-weight: normal;
 }
 button {
     background-color: rgb(66, 66, 33); /* Green */
@@ -13,9 +28,9 @@ button {
     text-decoration: none;
     display: inline-block;
     font-size: 20px;
-    font-weight: bold;
     border-radius: 10px;
     user-select: none;
+    font-family: 'Cubic_11', 'Noto Sans TC';
 }
 button:hover,
 button:focus {
@@ -38,13 +53,27 @@ td.face {
 }
 input {
     font-size: 20px;
-    font-family: 'Plaza', 'Cascadia Code', 'FiraCode', 'Cubic 11', 'Noto Sans TC';
+    font-family: 'Cascadia Code', 'FiraCode', 'Noto Sans TC';
     margin: 0 auto;
     text-align: center;
 }
+input.commit {
+    border: 0;
+    font-size: 22px;
+    background-color: #663366;
+    color: #fff;
+    border-radius: 10px;
+    cursor: pointer;
+    font-family: 'Cubic_11', 'Noto Sans TC';
+}
+input.commit:hover {
+    border: 0;
+    color: #fff;
+    background-color: #6b1b6b;
+}
 textarea {
     font-size: 20px;
-    font-family: 'Plaza', 'Cascadia Code', 'FiraCode', 'Cubic 11', 'Noto Sans TC';
+    font-family: 'Cascadia Code', 'FiraCode', 'Noto Sans TC';
     margin: 0 auto;
     text-align: center;
 }
@@ -57,20 +86,20 @@ textarea {
     background: #efefef;
     border: 1px solid #595656;
 }
-#button_input {
+.button_input {
     display: none;
+    border: none;
+    left: -100px;
     user-select: none;
 }
 .button_icon {
     white-space: pre;
-    font-weight: bold;
     font-size: 100%;
     position: absolute;
     left: -100px;
 }
 .button_icon:hover {
     white-space: pre;
-    font-weight: bold;
     font-size: 100%;
     position: absolute;
     left: -90px;
@@ -81,24 +110,11 @@ textarea {
 select {
     cursor: pointer;
     font-size: 24px;
-    font-family: 'Plaza', 'Cascadia Code', 'FiraCode', 'Cubic 11', 'Noto Sans TC';
-}
-input.commit {
-    border: 0;
-    font-size: 22px;
-    background-color: #663366;
-    color: #fff;
-    border-radius: 10px;
-    cursor: pointer;
-    font-weight: lighter;
-}
-input.commit:hover {
-    border: 0;
-    color: #fff;
-    background-color: #6b1b6b;
+    font-family: 'Cubic_11', 'Noto Sans TC';
+    /* font-family: 'Cascadia Code', 'FiraCode'; */
 }
 label {
-    padding: 0;
+    /* padding: 4px 8px; */
     margin-right: auto;
     cursor: pointer;
 }
@@ -106,24 +122,29 @@ input[type='checkbox'] {
     display: none;
 }
 .checkbox {
-    background-color: rgb(66, 66, 33); /* Green */
+    background-color: rgb(66, 66, 33);
     border: none;
     color: white;
-    padding: 4px 8px;
+    padding: 8px 10px;
     text-align: center;
     text-decoration: none;
     display: inline-block;
     font-size: 20px;
     border-radius: 10px;
-    user-select: none; /* 防止文字被滑鼠選取反白 */
+    user-select: none;
+    font-family: 'Cubic_11', 'Noto Sans TC';
 }
-
 input[type='checkbox']:checked + span {
     color: #fff;
     background-color: #0053ba;
 }
 a {
     color: white;
-    font-weight: lighter;
+    text-decoration: none;
+}
+.errorMessage {
+    color: rgb(180, 0, 0);
+    font-size: 20px;
+    font-family: 'Noto Sans TC';
     text-decoration: none;
 }

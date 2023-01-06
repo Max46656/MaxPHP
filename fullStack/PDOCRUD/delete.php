@@ -1,7 +1,7 @@
 <?php
-
 require_once "connDB.php";
-$delete = new delete;
+$connDB = new connDB;
+$delete = new delete($connDB);
 if (!isset($_POST["action"]) or !$_POST["action"] == "delete") {
     try {
         header("Location:index.php?DBSelect={$DBSelect}&error=delete");
@@ -26,16 +26,17 @@ die("( ˘•ω•˘ )你是不是在做什麼奇怪的事");
 
 class delete
 {
-    public function __construct()
+    protected static $connDB;
+
+    public function __construct(connDB $connDB)
     {
-        require_once "connDB.php";
-        require_once 'Inflect.php';
+        self::$connDB = $connDB->ConnDB();
+        $connDB = null;
     }
     public function deleteOne()
     {
         try {
-            $conn = new connDB;
-            $conn = $conn->ConnDB();
+            $conn = self::$connDB;
             $sql = "DELETE FROM `{$_GET['DBSelect']}` WHERE `id`={$_GET['id']}";
             $result = $conn->prepare($sql);
             $result->execute();
@@ -50,8 +51,7 @@ class delete
     public function deleteMultiple()
     {
         try {
-            $conn = new connDB;
-            $conn = $conn->ConnDB();
+            $conn = self::$connDB;
             $del = $_POST['del'];
             $sql = "DELETE FROM `{$_GET['DBSelect']}` WHERE `id` IN (";
             foreach ($del as $key => $value) {
@@ -72,8 +72,7 @@ class delete
     public function deleteOneJunction()
     {
         try {
-            $conn = new connDB;
-            $conn = $conn->ConnDB();
+            $conn = self::$connDB;
             $sql = "SET FOREIGN_KEY_CHECKS=0;";
             $sql .= "DELETE FROM `{$_GET['DBSelect']}` WHERE";
             $DBSelect = array_shift($_GET);
@@ -96,8 +95,7 @@ class delete
     public function deleteMultipleJunction()
     {
         try {
-            $conn = new connDB;
-            $conn = $conn->ConnDB();
+            $conn = self::$connDB;
             $del = $_POST['del'];
             $sql = "DELETE FROM `{$_GET['DBSelect']}` WHERE `id` IN (";
             foreach ($del as $key => $value) {

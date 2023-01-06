@@ -5,53 +5,58 @@ require_once "config.php";
 // $config = new config;
 // $connDB = new connDB($config);
 // echo var_export($connDB->ConnDB());
-class connDB extends config
+final class connDB
 {
-    // private static $dbName;
-    // private static $dbms;
-    // private static $host;
-    // private static $user;
-    // private static $pass;
-    // public function __construct(config $config)
-    // {
-    //     config::$dbName = $config->dbName;
-    //     config::$dbms = $config->dbms;
-    //     config::$host = $config->host;
-    //     config::$user = $config->user;
-    //     config::$pass = $config->pass;
-    // }
+    protected static $dbName;
+    protected static $dbms;
+    protected static $host;
+    protected static $user;
+    protected static $pass;
 
-    public function ConnDB()
+    public function __construct()
     {
-        $dsn = config::$dbms . ":host=" . config::$host . ";dbname=" . config::$dbName;
+        $config = new config;
+        self::$dbName = $config::$dbName;
+        self::$dbms = $config::$dbms;
+        self::$host = $config::$host;
+        self::$user = $config::$user;
+        self::$pass = $config::$pass;
+        $config = null;
+    }
+
+    final public function ConnDB()
+    {
         try {
-            $conn = new PDO($dsn, config::$user, config::$pass);
+            $dsn = self::$dbms . ":host=" . self::$host . ";dbname=" . self::$dbName;
+            $user = self::$user;
+            $pass = self::$pass;
+            $conn = new PDO($dsn, $user, $pass);
         } catch (PDOException $e) {
-            die("ヽ(´;ω;`)ﾉ!: " . $e->getMessage() . "<br/>");
+            die("<span class=errorMessage>" . "ヽ(´;ω;`)ﾉ!: " . $e->getMessage() . "</span><br/>");
         }
         return $conn;
     }
 
-    public function tblName()
+    final public function tblName()
     {
         $conn = $this->ConnDB();
-        $Sql = "SHOW TABLES FROM`" . config::$dbName . "`";
+        $Sql = "SHOW TABLES FROM`" . self::$dbName . "`";
         $DBMeta = $conn->prepare($Sql);
         $DBMeta->execute();
         foreach ($DBMeta as $key => $tableMeta) {
-            $tblName[] = $tableMeta["Tables_in_" . config::$dbName];
+            $tblName[] = $tableMeta["Tables_in_" . self::$dbName];
         }
         $DBMeta = null;
         $conn = null;
         return $tblName;
     }
-    public function fieldMeta()
+    final public function fieldMeta()
     {
         if (!isset($_GET['DBSelect'])) {
             exit;
         }
         $conn = $this->ConnDB();
-        $Sql = "SHOW COLUMNS FROM" . "`{$_GET['DBSelect']}`" . "FROM`" . config::$dbName . "`";
+        $Sql = "SHOW COLUMNS FROM" . "`{$_GET['DBSelect']}`" . "FROM`" . self::$dbName . "`";
         $tableMeta = $conn->prepare($Sql);
         $tableMeta->execute();
         foreach ($tableMeta as $key => $colMeta) {
@@ -74,10 +79,10 @@ class connDB extends config
         $field = array_combine($fieldName, $fieldType);
         return $field;
     }
-    public function fieldDetail()
+    final public function fieldDetail()
     {
         $conn = $this->ConnDB();
-        $Sql = "SHOW COLUMNS FROM" . "`{$_GET['DBSelect']}`" . "FROM`" . config::$dbName . "`";
+        $Sql = "SHOW COLUMNS FROM" . "`{$_GET['DBSelect']}`" . "FROM`" . self::$dbName . "`";
         $tableMeta = $conn->prepare($Sql);
         $tableMeta->execute();
         foreach ($tableMeta as $key => $colMeta) {

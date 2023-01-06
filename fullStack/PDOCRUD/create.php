@@ -13,10 +13,12 @@
 </head>
 
 <body>
-  <?$Create = new Create;?>
+  <?require_once "connDB.php";?>
+  <?$connDB = new connDB;?>
+  <?$Create = new Create($connDB);?>
   <div id="main">
     <h1>
-      <?echo $Create->titleSingular(); ?>
+      <?echo $Create->title(); ?>
     </h1>
     <?echo $Create->success(); ?>
     <br>
@@ -46,15 +48,21 @@
 
 <?php
 
-use Inflect\Inflect;
+use grammar\Inflect;
 
 class Create
 {
-    public function __construct()
+    protected static $connDB;
+    protected $tblNames;
+    protected $fieldMeta;
+
+    public function __construct(connDB $connDB)
     {
-        require_once "connDB.php";
-        require_once 'Inflect.php';
-        // return var_export(self::$DBSelect);
+        require 'Inflect.php';
+        self::$connDB = $connDB->ConnDB();
+        $this->tblNames = $connDB->tblName();
+        $this->fieldMeta = $connDB->fieldMeta();
+        $connDB = null;
     }
     public function success()
     {
@@ -64,31 +72,25 @@ class Create
     }
     public function title()
     {
-        $title = "新增";
-        if (isset($_GET['DBSelect'])) {
-            $title .= mb_convert_case($_GET['DBSelect'], MB_CASE_TITLE, "UTF-8");
-        } elseif (isset($_POST['DBSelect'])) {
-            $title .= mb_convert_case($_POST['DBSelect'], MB_CASE_TITLE, "UTF-8");
-        } else {
-            return "新增專案資料";
+        if (!isset($_GET['DBSelect'])) {
+            return "專案資料";
         }
+        $title = mb_convert_case($_GET['DBSelect'], MB_CASE_TITLE, "UTF-8");
+        $title = $this->Singular($title);
         return $title;
     }
-    public function titleSingular()
+    protected function Singular($String)
     {
-        $title = $this->title();
-        $titleSingular = Inflect::singularize($title);
-        return $titleSingular;
+        $SingularString = Inflect::singularize($String);
+        return $SingularString;
     }
     public function DBSelect()
     {
-        $conn = new connDB;
-        $tblNames = $conn->tblName();
+        $tblNames = $this->tblNames;
         $htmlTag = "";
         foreach ($tblNames as $key => $value) {
             $htmlTag .= "<option value=" . $value . ">" . $value . "</option>";
         }
-        $conn = null;
         return $htmlTag;
     }
     // public function fromTitle()
@@ -111,8 +113,7 @@ class Create
         if (!isset($_GET['DBSelect'])) {
             exit;
         }
-        $conn = new connDB;
-        $result = $conn->fieldMeta();
+        $result = $this->fieldMeta;
         $htmlTag = "";
         if (isset($result['id'])) {
             array_splice($result, 0, 1);
@@ -148,21 +149,20 @@ class Create
             }
             if ($value == "checkbox") {
                 $htmlTag .= "<td><label class='button_cover'>
-                <input id='button_input' type='checkbox' name='$key' value='$value'>
+                <input class='button_input' type='checkbox' name='$key' value='$value'>
                 <span class='button_icon'>(･ω´･ )つ啟用</span>
                 </label></td></tr>";
                 continue;
             }
             if ($key == "pic" or $key == "icon" or $key == "pics" or $value == "image") {
                 $htmlTag .= "<td><label class='button_cover'>
-                <input id='button_input' type='file' accept='.jpg, .jpeg, .png, .bmp, .gif,'>
+                <input class='button_input' type='file' accept='.jpg, .jpeg, .png, .tiff, .bmp, .gif,'>
                 <span class='button_icon'>(つ´ω`)つ點我</span>
                 </label></td></tr>";
                 continue;
             }
             $htmlTag .= "<td><input type='$value' name='$key' placeholder='$value'></td></tr>";
         }
-        $conn = null;
         return $htmlTag;
     }
     public function submitDB()
@@ -173,8 +173,7 @@ class Create
     public function save()
     {
         if (isset($_POST["action"])) {
-            $conn = new connDB;
-            $conn = $conn->ConnDB();
+            $conn = self::$connDB;
             $table = array_pop($_POST);
             array_splice($_POST, -2);
             $sql = "SET FOREIGN_KEY_CHECKS=0;";
@@ -194,14 +193,12 @@ class Create
                 $result = $conn->prepare($sql);
                 $result->execute();
                 $conn = null;
-                header("Location:http://max.com:666/Maxfirstone/fullStack/PDOCRUD/create.php?DBSelect={$table}&success=NiceJob");
+                header("Location:http://max.com:666/Maxfirstone/fullStack/PDOCRUD/create.php?DBSelect={$table}&success");
             } catch (PDOException $e) {
                 $conn = null;
-                die("ヽ(´;ω;`)ﾉ!: " . $e->getMessage() . "<br/>");
-
+                die("<span class=errorMessage>" . "ヽ(´;ω;`)ﾉ!: " . $e->getMessage() . "</span><br/>");
             }
         }
-
     }
 }
 
